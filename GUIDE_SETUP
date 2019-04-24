@@ -1,0 +1,8 @@
+1. Create file requirements
+  pip freeze > requirements.txt
+2. Install library
+  pip install -r requirements.txt
+3. Run UnitTest
+  make test
+4. Formater
+  pip install -U autopep8

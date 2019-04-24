@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login V12</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+<!-- =============================================================================================== -->
+	<link rel="stylesheet" href="{{ url_for('static',filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="{{ url_for('static',filename='fonts/Linearicons-Free-v1.0.0/icon-font.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" href="{{ url_for('static',filename='vendor/animate/animate.css') }}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='vendor/css-hamburgers/hamburgers.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='vendor/select2/select2.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div style="display: none"><input value="0" id ="index"></div>
+			
+			<div class="wrap-login100 p-t-190 p-b-30" style="padding-top:0px;">
+				<form class="login100-form validate-form">
+					<span class="login100-form-title p-t-20 p-b-45">
+							Login using face
+					</span>
+					<div class="login100-form-avatar" style="width:300px; height:300px; border-radius: 0px;">
+						<video autoplay="true" id="videoElement" width="300px;" height="300px;">
+
+						</video>
+						<canvas id="thecanvas" style="visibility:collapse">
+						</canvas>
+					</div>					
+
+					<div class="wrap-input100 validate-input m-b-10" data-validate = "Username is required">
+						<input id="txtUsername" class="input100" value="Thongnm" type="text" name="username" placeholder="Username">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-10" data-validate = "Password is required">
+						<input class="input100" type="password" name="pass" placeholder="Password">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock"></i>
+						</span>
+					</div>
+
+					<div class="container-login100-form-btn p-t-10">
+							<button type="button" id="btnDetect" class="btn btn-success" style="margin:5px;">Detect</button>
+							<button type="button" class="btn btn-warning" style="margin:5px;">Login</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	
+<!--===============================================================================================-->	
+	<script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static',filename='vendor/bootstrap/js/popper.js') }}"></script>
+	<script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static',filename='vendor/select2/select2.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static',filename='js/main.js') }}"></script>
+	
+<!--===============================================================================================-->
+
+	<script>
+			var video = document.querySelector("#videoElement");
+			var video_stream, imageCapture;
+			var thecanvas = document.getElementById('thecanvas');
+			var img = document.getElementById('thumbnail_img');
+			var dataURL = "";
+			function draw() {
+	
+				thecanvas.width = video.videoWidth;
+				thecanvas.height = video.videoHeight;
+	
+				// get the canvas context for drawing
+				var context = thecanvas.getContext('2d');
+	
+				// draw the video contents into the canvas x, y, width, height
+				context.drawImage(video, 0, 0, thecanvas.width, thecanvas.height);
+	
+				// get the image data from the canvas object
+				dataURL = thecanvas.toDataURL();
+
+			}
+	
+			$(document).ready(function () {
+				navigator.getUserMedia = (navigator.getUserMedia ||
+                            navigator.webkitGetUserMedia ||
+                            navigator.mozGetUserMedia || 
+							navigator.msGetUserMedia);
+							
+				if (navigator.getUserMedia) {
+					navigator.getUserMedia({ video: true },
+						function (stream) {
+
+							video.srcObject = stream;
+						},
+						function(err) {
+							// Log the error to the console.
+							console.log('The following error occurred when trying to use getUserMedia: ' + err);
+						}
+					);
+				}
+				else {
+					alert('Sorry, your browser does not support getUserMedia');
+				}
+			});
+	
+			function btnCheckFace_Click() {
+				draw();
+			}
+	
+			function stop_camera() {
+				video.pause();
+			}
+	
+			function start_camera() {
+				video.play();
+			}
+	
+			//a blob of the caotured image is passed to the success callback
+			function showImage(blobeven) {
+				//retrieve the Data URI of the image
+				document.getElementById("captured_image").src = URL.createObjectURL(blobevent.data);
+			}
+	
+			function photoError() {
+				console.log('failure to take photo');
+			}
+
+			$("#btnDetect").on('click', function(){
+				video.pause();
+				draw();
+				data = {"index": 1,
+                "username": $("#txtUsername").val(),
+                "image_data": dataURL
+        }
+				// var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+					$.ajax({
+						type: "POST",
+						url: "/addUserImage",
+						data: JSON.stringify(data),
+						contentType: 'application/json',
+						success: function(data){
+							console.log(data);
+						}
+					});
+					
+					$("#index").val(data.index);
+					$("#index").parent().removeClass("hiden");
+			})
+
+
+		</script>
+</body>
+</html>
