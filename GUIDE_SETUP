@@ -6,3 +6,5 @@
   make test
 4. Formater
   pip install -U autopep8
+5. Set enviroment for project
+  python -m venv env

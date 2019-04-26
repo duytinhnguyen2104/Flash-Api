@@ -2,20 +2,20 @@ import os
 
 
 class Config(object):
-  """Parent configuration class."""
-  DEBUG = False
-  
-  SECRET_KEY = 'ngminhthong.cntp@gmail.com'
+    """Parent configuration class."""
+    DEBUG = False
 
-  DB_USER = 'root'
+    SECRET_KEY = 'ngminhthong.cntp@gmail.com'
 
-  DB_PASS = ''
+    DB_USER = 'root'
 
-  DB_HOST = 'localhost'
+    DB_PASS = ''
 
-  DB_PORT = '3306'
+    DB_HOST = 'localhost'
 
-  DB_NAME = 'Flask_face_recognition'
+    DB_PORT = '3306'
+
+    DB_NAME = 'Flask_face_recognition'
 
 
 

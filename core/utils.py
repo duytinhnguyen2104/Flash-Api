@@ -11,10 +11,8 @@ TRAIN_PATH = 'alx_examples'
 SUB_IMG = 'train'
 FILE_EXTENTION = '.JPG'
 
-
 def checkIsExit(_path):
   return os.path.isdir(_path)
-
 
 def makeDir(root=0, subpath=''):
   """
@@ -41,7 +39,6 @@ def makeDir(root=0, subpath=''):
     os.makedirs(FULL_PATH)
   return FULL_PATH
 
-
 def deleteTmpFolder():
   """
     Descriptions: Delete all subfolder from parameter
@@ -57,7 +54,6 @@ def deleteTmpFolder():
         shutil.rmtree(path_str)
     except Exception as e:
       print(e)
-
 
 def moveFile(source='', dst=''):
   if not source:
@@ -75,13 +71,11 @@ def moveFile(source='', dst=''):
   # Delete Folder after copy to dst
   deleteTmpFolder()
 
-
 def copyFile(folder, dst):
   for file in os.listdir(folder):
     src = os.path.join(folder, file)
     if(os.path.isfile(src)):
       shutil.copy(src, dst)
-
 
 def makeFile(data='', UserId='', idx=0):
   """
@@ -96,10 +90,8 @@ def makeFile(data='', UserId='', idx=0):
   with open(file_path, 'wb') as file:
     file.write(base64.b64decode(data))
 
-
 def training(UserId=''):
   print("")
-
 
 def makeError(error):
   message = [str(x) for x in error.args][0]

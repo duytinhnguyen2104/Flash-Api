@@ -1,5 +1,6 @@
 
 from flask_restful import Resource
+from flask import Request
 
-class user(Resource):
-  def authen():
+class user(Resource, Request):
+  
