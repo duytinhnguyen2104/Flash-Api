@@ -9,7 +9,7 @@ TEMP_PATH = 'tmp'
 FULL_PATH = ''
 TRAIN_PATH = 'alx_examples'
 SUB_IMG = 'train'
-FILE_EXTENTION = '.JPG'
+FILE_EXTENTION = '.txt'
 
 def checkIsExit(_path):
   return os.path.isdir(_path)
@@ -91,8 +91,8 @@ def makeFile(data='', UserId='', idx=0):
     file.write(base64.b64decode(data))
 
 def training(UserId=''):
-  print("")
+  print("traing success")
 
 def makeError(error):
-  message = [str(x) for x in error.args][0]
+  message = [str(x) for x in error.args]
   return message

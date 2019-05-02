@@ -22,6 +22,14 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/util.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 <!--===============================================================================================-->
+	<style>
+	
+			video {
+			-webkit-transform: scaleX(-1);
+			transform: scaleX(-1);
+		}
+	</style>
+
 </head>
 <body>
 	
@@ -34,7 +42,7 @@
 					<span class="login100-form-title p-t-20 p-b-45">
 							Login using face
 					</span>
-					<div class="login100-form-avatar" style="width:300px; height:300px; border-radius: 0px;">
+					<div class="login100-form-avatar" style="width:900px; height:300px; border-radius: 0px;">
 						<video autoplay="true" id="videoElement" width="300px;" height="300px;">
 
 						</video>
@@ -94,6 +102,10 @@
 				// get the canvas context for drawing
 				var context = thecanvas.getContext('2d');
 	
+				video.addEventListener('loadedmetadata', function() {
+					context.translate(video.videoWidth, 0); 
+					context.scale(-1, 1);
+         });
 				// draw the video contents into the canvas x, y, width, height
 				context.drawImage(video, 0, 0, thecanvas.width, thecanvas.height);
 	
@@ -147,27 +159,27 @@
 				console.log('failure to take photo');
 			}
 
-			$("#btnDetect").on('click', function(){
-				video.pause();
-				draw();
-				data = {"index": 1,
-                "username": $("#txtUsername").val(),
-                "image_data": dataURL
-        }
-				// var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-					$.ajax({
-						type: "POST",
-						url: "/addUserImage",
-						data: JSON.stringify(data),
-						contentType: 'application/json',
-						success: function(data){
-							console.log(data);
-						}
-					});
+			// $("#btnDetect").on('click', function(){
+			// 	video.pause();
+			// 	draw();
+			// 	data = {"index": 1,
+      //           "username": $("#txtUsername").val(),
+      //           "image_data": dataURL
+      //   }
+			// 	// var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+			// 		$.ajax({
+			// 			type: "POST",
+			// 			url: "/addUserImage",
+			// 			data: JSON.stringify(data),
+			// 			contentType: 'application/json',
+			// 			success: function(data){
+			// 				console.log(data);
+			// 			}
+			// 		});
 					
-					$("#index").val(data.index);
-					$("#index").parent().removeClass("hiden");
-			})
+			// 		$("#index").val(data.index);
+			// 		$("#index").parent().removeClass("hiden");
+			// })
 
 
 		</script>

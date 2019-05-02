@@ -15,4 +15,4 @@ def handle_error(error):
         }
     }
 
-    return jsonify(response), 500
+    return jsonify(response), error.code 

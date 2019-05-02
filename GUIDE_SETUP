@@ -8,3 +8,10 @@
   pip install -U autopep8
 5. Set enviroment for project
   python -m venv env
+
+6.================================= coverage =================================
+coverage run tests.py [File cần run]
+
+coverage report -m
+
+coverage html
