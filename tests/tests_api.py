@@ -28,6 +28,7 @@ class ClientTest(unittest.TestCase):
         res = self.client.post('/addUserImage', data = json.dumps(self.data), content_type='application/json')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.content_type, 'application/json')
+        data = res.get_json()
 
     def test_adduserimage_500(self):
         """
@@ -61,6 +62,8 @@ class ClientTest(unittest.TestCase):
         res = self.client.post('/face_recognition_func')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.content_type, 'application/json')
+
+    
 
 if __name__ == '__main__':
     unittest.main()

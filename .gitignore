@@ -1,4 +1,7 @@
 .vscode
 *__pycache__
 *env
-reports
+/tmp
+/reports
+/log
+/alx_examples
