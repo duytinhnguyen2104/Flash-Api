@@ -96,3 +96,48 @@ def training(UserId=''):
 def makeError(error):
   message = [str(x) for x in error.args]
   return message
+
+def getUser():
+  res = []
+  dst = os.path.join(TRAIN_PATH, SUB_IMG)
+  if(checkIsExit(dst)):
+    count = 0
+    for itm in os.listdir(dst):
+      res.insert(count, itm)
+      count = count + 1
+  return res
+
+def getUserDetail(username):
+  res = []
+  dst = os.path.join(TRAIN_PATH, SUB_IMG)
+  dst = os.path.join(dst, username)
+  if(checkIsExit(dst)):
+    count = 0
+    for file in os.listdir(dst):
+      url = os.path.join(dst, file)
+      if(os.path.isfile(url)):
+        name, ext = os.path.splitext(file);
+        print(ext.upper())
+        if(ext.upper() == '.JPG'):
+          obj = {}
+          obj["url"] = url
+          obj["name"] = file
+          obj["user"] = username
+          res.insert(count, obj)
+          count = count + 1
+  return res
+
+def removeProfile(objdata = {}, isall = False):
+  if not objdata:
+    return False
+  if(isall):
+    dst = os.path.join(TRAIN_PATH, objdata.get('user'))
+    if(checkIsExit(dst)):
+      for itm in os.listdir(dst):
+        file = os.path.join(dts)
+        os.unlink(file)
+        return True
+  elif(os.path.isfile(objdata.get('url'))):
+      # os.unlink(objdata.get('url')))
+      return True
+  return False

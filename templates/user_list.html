@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Users</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}"/>
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+  <!-- =============================================================================================== -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user.css') }}">
+</head>
+
+<body>
+  <div class="page">
+    <!-- start header -->
+    <header>
+      <div class="page-header">
+        <div class="container container-custom">
+          <p class="header-tilte">Danh sách User</p>
+        </div>
+      </div>
+    </header>
+    <!-- end header -->
+
+    <!-- start content -->
+    <div class="page-content">
+      <div class="container">
+        <div class="container px-0">
+          <div class="pp-gallery">
+            <div class="card-columns">
+                {% for itm in data %}
+                <div class="card">
+                    <a href="{{url_for('userdetail', username=itm)}}">
+                        <figure class="pp-effect">
+                            <img src="./../static/images/album.png" title="{{itm}}" class="img-fluid img-full">
+                            <figcaption><div class="h4">{{itm}}</div><p>{{itm}}</p></figcaption>
+                        </figure>
+                      </a>
+                </div>
+                {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--===============================================================================================-->	
+<script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static',filename='vendor/bootstrap/js/popper.js') }}"></script>
+	<script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+</body>
+
+</html>

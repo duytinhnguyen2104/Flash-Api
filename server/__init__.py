@@ -7,7 +7,7 @@ import argparse, re
 from core.config import app_config
 from core.logger import logger
 from core.response import handle_error
-from core.utils import moveFile, makeFile, training, makeError
+from core.utils import moveFile, makeFile, training, makeError, getUser, getUserDetail, removeProfile
 
 # ap = argparse.ArgumentParser()
 

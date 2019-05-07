@@ -22,6 +22,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/util.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 <!--===============================================================================================-->
+	
 	<style>
 	
 			video {
@@ -68,7 +69,7 @@
 
 					<div class="container-login100-form-btn p-t-10">
 							<button type="button" id="btnDetect" class="btn btn-success" style="margin:5px;">Detect</button>
-							<button type="button" class="btn btn-warning" style="margin:5px;">Login</button>
+							<button type="button" class="btn btn-warning" style="margin:5px;" onclick="btn_click()">Login</button>
 					</div>
 				</form>
 			</div>
@@ -88,7 +89,18 @@
 	
 <!--===============================================================================================-->
 
-	<script>
+<script type="text/javascript">
+		var script = document.createElement('script');
+    script.src = "static/test1.js?v=" + Math.random();
+    document.write(script.outerHTML);
+</script>
+<script type="text/javascript">
+		var script = document.createElement('script');
+    script.src = "static/test2.js?v=" + Math.random();
+    document.write(script.outerHTML);
+</script>
+<script>
+
 			var video = document.querySelector("#videoElement");
 			var video_stream, imageCapture;
 			var thecanvas = document.getElementById('thecanvas');

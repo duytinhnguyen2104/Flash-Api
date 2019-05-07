@@ -6,13 +6,14 @@ from server.server import app
 
 COV = coverage.coverage(
     branch=True,
+    # Các file cần test
     include='./*',
+    # loại bỏ những file không cần test
     omit=['*/tests/*', 'manage.py']
 )
 COV.start()
 
 manager = Manager(app)
-
 @manager.command
 def test():
     """Runs the unit tests without coverage."""
@@ -22,8 +23,6 @@ def test():
         return 0
     else:
         return 1
-
-
 @manager.command
 def cov():
     """Runs the unit tests with coverage."""

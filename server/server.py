@@ -4,7 +4,7 @@ from server import (
   abort, make_response, jsonify, 
   # utils
   logger, handle_error,
-  makeError, moveFile, training, makeFile
+  makeError, moveFile, training, makeFile, getUser, getUserDetail, removeProfile
 )
 
 import uuid
@@ -89,3 +89,36 @@ def addUserImage():
     except Exception as e:
         logger.insertLog('Exception:', makeError(e))
         return handle_error(e)
+# ================================== LINK API ==================================
+
+@app.route('/userlist', methods=['GET'])
+def userlist():
+  try:
+    users = getUser()
+    return render_template('user_list.html', data=users)
+  except Exception as e:
+    logger.insertLog('Exception:', makeError(e))
+    return handle_error(e)
+
+@app.route('/userdetail/<username>', methods=['GET'])
+def userdetail(username):
+  try:
+    detail = getUserDetail(username)
+    return render_template('user_detail.html', detail = detail)
+  except Exception as e:
+    logger.insertLog('Exception:', makeError(e))
+    return handle_error(e)
+
+@app.route('/removeProfile/<isall>', methods=['POST'])
+def removeProfile(isall):
+  try:
+    if not request.get_json():
+      abort(400)
+    data = request.get_json()
+    isresult = removeProfile(data, isall=isall)
+    message = "Success" if isresult else "Fails"
+    result = {"status": detail, "message": message}
+    return jsonify(result)
+  except Exception as e:
+    logger.insertLog('Exception', makeError(e))
+    return handle_error(e)
