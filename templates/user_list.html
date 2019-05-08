@@ -17,6 +17,8 @@
 
 <body>
   <div class="page">
+    <!-- navabar -->
+
     <!-- start header -->
     <header>
       <div class="page-header">
@@ -32,13 +34,13 @@
       <div class="container">
         <div class="container px-0">
           <div class="pp-gallery">
-            <div class="card-columns">
+            <div class="row row-container">
                 {% for itm in data %}
-                <div class="card">
-                    <a href="{{url_for('userdetail', username=itm)}}">
+                <div class="col-6 col-sm-3 cart-item">
+                    <a data-id="{{itm}}" id="userinfo" href="{{url_for('userdetail', username=itm)}}">
                         <figure class="pp-effect">
-                            <img src="./../static/images/album.png" title="{{itm}}" class="img-fluid img-full">
-                            <figcaption><div class="h4">{{itm}}</div><p>{{itm}}</p></figcaption>
+                            <img src="./../static/images/album.png" title="{{itm}}" class="img-fluid">
+                            <figcaption><div class="h4">{{itm}}</div></figcaption>
                         </figure>
                       </a>
                 </div>
@@ -48,6 +50,9 @@
         </div>
       </div>
     </div>
+    <!-- end content -->
+    <!-- start detail -->
+    <div class="hiden" id="detail"></div>
   </div>
 <!--===============================================================================================-->	
 <script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>

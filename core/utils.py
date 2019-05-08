@@ -117,27 +117,36 @@ def getUserDetail(username):
       url = os.path.join(dst, file)
       if(os.path.isfile(url)):
         name, ext = os.path.splitext(file);
-        print(ext.upper())
         if(ext.upper() == '.JPG'):
           obj = {}
-          obj["url"] = url
-          obj["name"] = file
-          obj["user"] = username
+          obj['url'] = url
+          obj['name'] = file
+          obj['user'] = username
+          obj['data'] = convertImg(url)
           res.insert(count, obj)
           count = count + 1
   return res
 
+def convertImg(url):
+  with open(url, "rb") as image_file:
+    encoded_string = base64.b64encode(image_file.read())
+  return encoded_string.decode("utf-8")
+
 def removeProfile(objdata = {}, isall = False):
   if not objdata:
     return False
-  if(isall):
-    dst = os.path.join(TRAIN_PATH, objdata.get('user'))
-    if(checkIsExit(dst)):
-      for itm in os.listdir(dst):
-        file = os.path.join(dts)
-        os.unlink(file)
+  try:
+    if(isall):
+      dst = os.path.join(TRAIN_PATH, SUB_IMG)
+      dst = os.path.join(dst, objdata.get('user'))
+      if(checkIsExit(dst)):
+        for itm in os.listdir(dst):
+          file = os.path.join(dst, itm)
+          os.unlink(file)
         return True
-  elif(os.path.isfile(objdata.get('url'))):
-      # os.unlink(objdata.get('url')))
+    elif(os.path.isfile(objdata.get('url'))):
+      os.unlink(objdata.get('url'))
       return True
-  return False
+    return False
+  except Exception as e:
+    return False

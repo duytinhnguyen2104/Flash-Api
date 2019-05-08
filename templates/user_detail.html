@@ -2,39 +2,115 @@
 <html>
 
 <head>
-    <title>Users</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}"/>
-  <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
-  <!-- =============================================================================================== -->
-    <link rel="stylesheet" href="{{ url_for('static',filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+  <title>Users</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" />
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+  <!-- =============================================================================================== -->
+  <link rel="stylesheet" href="{{ url_for('static',filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/detail.css') }}">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/animate.css') }}">
+
 </head>
 
 <body>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-          <div class="ligthbox">
-            {% for itm in detail %}
-            <div class="descriptions">{{itm}}</div>
-            {% endfor %}
-          </div>
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="wrap-table100">
+        <div class="table100 ver3 m-b-110">
+          <table data-vertable="ver3">
+            <thead>
+              <tr class="row100 head">
+                <th class="column100 column1" data-column="column1"></th>
+                <th class="column100 column2" data-column="column2">Description</th>
+                <th class="column100 column2" data-column="column3"><button type="button" data-id="{{user}}"
+                    title="Delete all" id="clearall"><i class="fa fa-trash"></i></button></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for itm in detail %}
+              <tr class="row100">
+                <td class="column100 column1" data-column="column1">
+                  <img src="data:image/png;base64,{{itm.data}}" class="img-fluid">
+                </td>
+                <td class="column100 column2" data-column="column2">{{itm.name}}</td>
+                <td class="column100 column3" data-column="column3">
+                  <button type="button" title="Delete" id="clear" data-user="{{itm.user}}" data-url="{{itm.url}}"><i
+                      class="fa fa-trash"></i></button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
-        
+
     </div>
   </div>
-<!--===============================================================================================-->	
-<script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
-<!--===============================================================================================-->
-	<script src="{{ url_for('static',filename='vendor/bootstrap/js/popper.js') }}"></script>
-	<script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-<!--===============================================================================================-->
+
+  <!-- start modal -->
+  <div class="bootbox modal fade bootbox-confirm in" tabindex="-1" role="dialog" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body"><button type="button" class="bootbox-close-button close" data-dismiss="modal"
+            aria-hidden="true" style="margin-top: -10px;">×</button>
+          <div class="bootbox-body">Bạn có thực sự muốn xoá ?</div>
+        </div>
+        <div class="modal-footer"><button data-bb-handler="cancel" type="button"
+            class="btn btn-default">Cancel</button><button data-bb-handler="confirm" type="button"
+            class="btn btn btn-primary">Đồng ý</button></div>
+      </div>
+    </div>
+  </div>
+  <!--===============================================================================================-->
+  <script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+  <!--===============================================================================================-->
+  <script src="{{ url_for('static',filename='vendor/bootstrap/js/popper.js') }}"></script>
+  <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+  <!--===============================================================================================-->
+
+  <script src="{{ url_for('static',filename='js/main.js') }}"></script>
+
+  <script>
+    var $SCRIPT_ROOT = {{ request.script_root| tojson | safe }};
+    $(document).ready(function () {
+      $('#clearall').on('click', function () {
+        var data = {};
+        data.user = $(this).data('id');
+        remove(data, true);
+      });
+
+      $('#clear').on('click', function () {
+        var data = {};
+        data.url = $(this).data('url');
+        data.user = $(this).data('user');
+        remove(data, false);
+      });
+    });
+
+    var remove = function (ojectdata, isall) {
+      $.ajax({
+        type: 'POST',
+        url: $SCRIPT_ROOT + "/removeProfile/" + isall,
+        data: JSON.stringify(ojectdata),
+        contentType: 'application/json',
+        success: function (data) {
+          console.log(data);
+          console.log($SCRIPT_ROOT + '/userdetail/' + ojectdata.user);
+          location.href = $SCRIPT_ROOT + '/userdetail/' + ojectdata.user;
+        }
+      });
+    };
+
+  </script>
+
 </body>
 
 </html>

@@ -104,20 +104,22 @@ def userlist():
 def userdetail(username):
   try:
     detail = getUserDetail(username)
-    return render_template('user_detail.html', detail = detail)
+    # return jsonify(detail)
+    return render_template('user_detail.html', detail = detail, user=username)
   except Exception as e:
     logger.insertLog('Exception:', makeError(e))
     return handle_error(e)
 
 @app.route('/removeProfile/<isall>', methods=['POST'])
-def removeProfile(isall):
+def remove(isall):
   try:
     if not request.get_json():
       abort(400)
     data = request.get_json()
-    isresult = removeProfile(data, isall=isall)
+    active = True if isall == 'true' else False
+    isresult = removeProfile(data, isall=active)
     message = "Success" if isresult else "Fails"
-    result = {"status": detail, "message": message}
+    result = {"status": isresult, "message": message, 'router': 'userdetail'}
     return jsonify(result)
   except Exception as e:
     logger.insertLog('Exception', makeError(e))
