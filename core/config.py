@@ -17,19 +17,42 @@ class Config(object):
 
     DB_NAME = 'Flask_face_recognition'
 
+    DB_LOCAL = './database'
+
+    DB_PROVIDER = 'sqlite:///'
+
+    DB_URL = DB_PROVIDER + DB_LOCAL + DB_NAME
+
 
 
 class DevelopmentConfig(Config):
-    """Configurations for Development."""
+    """
+        Configurations for Development.
+    """
     DEBUG = True
 
 
 class TestingConfig(Config):
-    """Configurations for Testing, with a separate test database."""
+    
+    """
+        Configurations for Testing
+    """
     TESTING = True
     DEBUG = True
+
+class ProductionConfig(Config):
+    DEBUG = True
+
+    DB_PROVIDER = 'sqlite:///'
+
+    DB_LOCAL = 'database'
+
+    DB_NAME = 'Flask_face_recognition.db'
+
+    DB_URL = DB_PROVIDER + os.path.join(DB_LOCAL, DB_NAME)
 
 app_config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
+    'product': ProductionConfig
 }

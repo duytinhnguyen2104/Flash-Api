@@ -2,64 +2,149 @@
 <html>
 
 <head>
-    <title>Users</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}"/>
-  <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
-  <!-- =============================================================================================== -->
-    <link rel="stylesheet" href="{{ url_for('static',filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+  <title>Users</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user.css') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icons/favicon.ico') }}" />
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+  <!-- =============================================================================================== -->
+  <link rel="stylesheet" href="{{ url_for('static',filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+
+  <link rel="stylesheet" type="text/css"
+    href="{{ url_for('static',filename='vendor/datatables/dataTables.bootstrap4.css') }}">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user.css') }}">
 </head>
 
 <body>
-  <div class="page">
-    <!-- navabar -->
 
-    <!-- start header -->
-    <header>
-      <div class="page-header">
-        <div class="container container-custom">
-          <p class="header-tilte">Danh sách User</p>
+  <div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">Danh sách User</h1>
+    <div class="card shadow mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr class="table-header">
+                <th>User Name</th>
+                <th>Full Name</th>
+                <th>Token</th>
+                <th>Admin</th>
+                <th>Active</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for itm in data %}
+              <tr data-id="{{itm.username}}">
+                <td>{{itm.username}}</td>
+                <td>{{itm.fullname}}</td>
+                <td>{{itm.token}}</td>
+                <td class="column-fix"><input type="checkbox" value="{{itm.isAdmin}}"></td>
+                <td class="column-fix"><input type="checkbox" value="{{itm.active}}"></td>
+                <td class="column-fix"><a class="btn btn-default" data-id="{{itm.username}}"><i
+                      class="fa fa-trash"></i></a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-      </div>
-    </header>
-    <!-- end header -->
 
-    <!-- start content -->
-    <div class="page-content">
-      <div class="container">
-        <div class="container px-0">
-          <div class="pp-gallery">
-            <div class="row row-container">
-                {% for itm in data %}
-                <div class="col-6 col-sm-3 cart-item">
-                    <a data-id="{{itm}}" id="userinfo" href="{{url_for('userdetail', username=itm)}}">
-                        <figure class="pp-effect">
-                            <img src="./../static/images/album.png" title="{{itm}}" class="img-fluid">
-                            <figcaption><div class="h4">{{itm}}</div></figcaption>
-                        </figure>
-                      </a>
-                </div>
-                {% endfor %}
-            </div>
-          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- start modal -->
+  <div class="modal fade in" tabindex="-1" role="dialog" id="popupconfirm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <input type="hidden" id="userid" />
+          <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true"
+            style="margin-top: -10px;">×</button>
+          <div class="bootbox-body">Bạn có thực sự muốn xoá ?</div>
+        </div>
+        <div class="modal-footer">
+          <button data-bb-handler="cancel" id="cancel" type="button" class="btn btn-default">Cancel</button>
+          <button data-bb-handler="confirm" id="confirm" type="button" class="btn btn btn-primary">Đồng ý</button>
         </div>
       </div>
     </div>
-    <!-- end content -->
-    <!-- start detail -->
-    <div class="hiden" id="detail"></div>
   </div>
-<!--===============================================================================================-->	
-<script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
-<!--===============================================================================================-->
-	<script src="{{ url_for('static',filename='vendor/bootstrap/js/popper.js') }}"></script>
-	<script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
-<!--===============================================================================================-->
+  <div id="backdrop"></div>
+
+  <!-- end modal -->
+
+  <!--===============================================================================================-->
+  <script src="{{ url_for('static',filename='vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+  <!--===============================================================================================-->
+  <script src="{{ url_for('static',filename='vendor/bootstrap/js/popper.js') }}"></script>
+  <script src="{{ url_for('static',filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+  <!--===============================================================================================-->
+  <script src="{{ url_for('static',filename='vendor/datatables/jquery.dataTables.js') }}"></script>
+  <script src="{{ url_for('static',filename='vendor/datatables/dataTables.bootstrap4.js') }}"></script>
+
+  <script>
+    var $SCRIPT_ROOT = {{ request.script_root| tojson | safe }};
+    $(document).ready(function () {
+
+      $('tbody tr td').each(function () {
+        $(this).find('input[type=checkbox]').each(function () {
+          if ($(this).val() == "True") {
+            $(this).prop('checked', true)
+          }
+        })
+      });
+
+      $('#dataTable').DataTable();
+
+      $('.btn-default').on('click', function () {
+        var userid = $(this).data('id');
+
+        $('#backdrop').addClass('modal-backdrop');
+        $('#popupconfirm').each(function () {
+          $(this).find('.modal-body #userid').each(function () {
+            $(this).val(userid);
+          });
+        });
+        $('#popupconfirm').show();
+      });
+
+      $('.close').on('click', function () {
+        $('.bootbox-confirm').hide();
+        $('#backdrop').removeClass('modal-backdrop');
+      })
+
+      $('#cancel').on('click', function () {
+        $('.bootbox-confirm').hide();
+        $('#backdrop').removeClass('modal-backdrop');
+      });
+
+      $('.btn-default').on('click', function () {
+        // var userid = $('#itm-delete').val();
+        var userid = $(this).data('id');
+        $.ajax({
+          type: 'POST',
+          url: $SCRIPT_ROOT + "/user/destroy/" + userid,
+          contentType: 'application/json',
+          success: function () {
+            location.reload();
+          }
+        });
+        $('#popupconfirm').hide();
+      })
+
+      $('tbody tr').click(function (event) {
+        if(!$(event.target).is('i') && !$(event.target).is('a'))
+          window.location = $SCRIPT_ROOT + "/user/profile/" + $(this).data('id');
+      })
+
+    });
+
+  </script>
 </body>
 
 </html>

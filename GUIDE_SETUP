@@ -15,3 +15,13 @@ coverage run tests.py [File cần run]
 coverage report -m
 
 coverage html
+
+7. ================================= comand line run =================================
+======= Khởi tạo migrations =======
+  python manage.py db init
+======= Thực hiện run migrate =======
+  python manage.py db migrate
+OR  
+  python manage.py [method] migrate
+======= Thực hiện update database =======
+  python manage.py db upgrade

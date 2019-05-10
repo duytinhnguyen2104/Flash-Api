@@ -3,7 +3,8 @@ import shutil
 import re
 import datetime
 import base64
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ExifTags
+from io import BytesIO
 
 TEMP_PATH = 'tmp'
 FULL_PATH = ''
@@ -128,9 +129,26 @@ def getUserDetail(username):
   return res
 
 def convertImg(url):
-  with open(url, "rb") as image_file:
-    encoded_string = base64.b64encode(image_file.read())
-  return encoded_string.decode("utf-8")
+    image_file = Image.open(url)
+    mode='RGB'
+    for orientation in ExifTags.TAGS.keys():
+        if ExifTags.TAGS[orientation] == 'Orientation':
+            break
+
+    if image_file._getexif() != None:
+      exif = dict(image_file._getexif().items())
+      if orientation in exif:
+          if exif[orientation] == 3:
+              image_file = image_file.rotate(180, expand=True)
+          elif exif[orientation] == 6:
+              image_file = image_file.rotate(270, expand=True)
+          elif exif[orientation] == 8:
+              image_file = image_file.rotate(90, expand=True)
+    image_file = image_file.convert(mode)
+    buffered = BytesIO()
+    image_file.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue())
+    return img_str.decode("utf-8")
 
 def removeProfile(objdata = {}, isall = False):
   if not objdata:
@@ -140,13 +158,17 @@ def removeProfile(objdata = {}, isall = False):
       dst = os.path.join(TRAIN_PATH, SUB_IMG)
       dst = os.path.join(dst, objdata.get('user'))
       if(checkIsExit(dst)):
-        for itm in os.listdir(dst):
-          file = os.path.join(dst, itm)
-          os.unlink(file)
+        shutil.rmtree(dst)
         return True
     elif(os.path.isfile(objdata.get('url'))):
       os.unlink(objdata.get('url'))
       return True
-    return False
+    return True
   except Exception as e:
     return False
+
+def beforeRemove(url, dicttmp):
+  return False
+
+def afterRemove(url):
+  return True

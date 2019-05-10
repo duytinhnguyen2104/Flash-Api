@@ -1,13 +1,15 @@
 from server import (
   # base
-  app, render_template, request, re, #, args
-  abort, make_response, jsonify, 
+  app, render_template, request, re, datetime, #, args
+  abort, make_response, jsonify,
   # utils
   logger, handle_error,
   makeError, moveFile, training, makeFile, getUser, getUserDetail, removeProfile
 )
 
-import uuid
+from model.UserController import UserController, db
+import json
+from core.constant import StatusCode as STATUS, Message as MSG
 # ================================== start handle error ==================================
 @app.errorhandler(400)
 def not_found(error):
@@ -91,36 +93,92 @@ def addUserImage():
         return handle_error(e)
 # ================================== LINK API ==================================
 
-@app.route('/userlist', methods=['GET'])
+@app.route('/user/list', methods=['GET'])
 def userlist():
   try:
-    users = getUser()
-    return render_template('user_list.html', data=users)
+    users = UserController.getList()
+    if users.get('status') == True:
+      data = users.get('users')
+      return render_template('user_list.html', data=data)
   except Exception as e:
     logger.insertLog('Exception:', makeError(e))
     return handle_error(e)
 
-@app.route('/userdetail/<username>', methods=['GET'])
+@app.route('/user/profile/<username>', methods=['GET'])
 def userdetail(username):
   try:
     detail = getUserDetail(username)
-    # return jsonify(detail)
     return render_template('user_detail.html', detail = detail, user=username)
   except Exception as e:
     logger.insertLog('Exception:', makeError(e))
     return handle_error(e)
 
-@app.route('/removeProfile/<isall>', methods=['POST'])
+@app.route('/user/removeProfile/<isall>', methods=['POST'])
 def remove(isall):
   try:
     if not request.get_json():
-      abort(400)
+      abort(STATUS.COD400)
     data = request.get_json()
     active = True if isall == 'true' else False
     isresult = removeProfile(data, isall=active)
-    message = "Success" if isresult else "Fails"
+    message = MSG.SUCCESS if isresult else MSG.FAILS
     result = {"status": isresult, "message": message, 'router': 'userdetail'}
     return jsonify(result)
   except Exception as e:
     logger.insertLog('Exception', makeError(e))
+    return handle_error(e)
+
+@app.route('/login/<username>', methods=['POST'])
+def login(username):
+  try:
+    if not username:
+      abort(STATUS.COD401)
+    user = UserController.login(username)
+    return jsonify(user)
+  except Exception as e:
+    logger.insertLog('Fails login', makeError(e))
+    return handle_error(e)
+
+@app.route('/user', methods=['GET'])
+def getList():
+  try:
+    user = UserController.getList()
+    return jsonify(user)
+  except Exception as e:
+    logger.insertLog('Fails login', makeError(e))
+    return handle_error(e)
+
+@app.route('/register', methods=['POST'])
+def register():
+  try:
+    if not request.json:
+      return jsonify({'status': False, 'statuscode': STATUS.COD400, 'message': MSG.BAD_REQUEST})
+    data = request.get_json()
+    response = UserController.register(data)
+    return jsonify(response)
+  except Exception as e:
+    logger.insertLog('Fails login', makeError(e))
+    return handle_error(e)
+
+@app.route('/user/destroy/<username>', methods=['POST'])
+def destroy(username):
+  try:
+    if not username:
+      return jsonify({'status': False, 'statuscode': STATUS.COD400, 'message': MSG.BAD_REQUEST})
+    response = UserController.remove(username)
+    return jsonify(response)
+  except Exception as e:
+    logger.insertLog('Fails login', makeError(e))
+    return handle_error(e)
+
+@app.route('/user/update/<username>', methods=['POST'])
+def remove_account(username):
+  try:
+    if not request.json:
+      return jsonify({'status': False, 'statuscode': STATUS.COD400, 'message': MSG.BAD_REQUEST})
+    data = request.get_json()
+    response = UserController.update(data, username)
+    return jsonify(response)
+  except Exception as e:
+    logger.insertLog('Fails login', makeError(e))
     return handle_error(e)
