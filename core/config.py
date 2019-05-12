@@ -33,7 +33,7 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    
+
     """
         Configurations for Testing
     """
@@ -47,7 +47,7 @@ class ProductionConfig(Config):
 
     DB_LOCAL = 'database'
 
-    DB_NAME = 'Flask_face_recognition.db'
+    DB_NAME = 'db_flask.db'
 
     DB_URL = DB_PROVIDER + os.path.join(DB_LOCAL, DB_NAME)
 

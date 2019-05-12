@@ -1,8 +1,8 @@
 from flask import Flask, Blueprint, make_response, abort, jsonify, render_template, request
 from flask_static_compress import FlaskStaticCompress
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_claims
-import jwt, os, jinja2
-import argparse, re
+# from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_claims
+# import jwt
+import argparse, re, os, jinja2
 import datetime
 
 #=============================import from project===========================
@@ -16,6 +16,5 @@ app = Flask(__name__, root_path='.')
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.static_folder = 'static'
-jwt = JWTManager(app)
+# jwt = JWTManager(app)
 FlaskStaticCompress(app)
-
