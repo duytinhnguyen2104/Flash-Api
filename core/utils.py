@@ -172,3 +172,35 @@ def beforeRemove(url, dicttmp):
 
 def afterRemove(url):
   return True
+
+def cleanup_sync():
+  try:
+    _local = getUser()
+    raw = DATABASE.excQuery('select * from users')
+    user = []
+    for idx, itm in enumerate(raw):
+      user.insert(idx, '{0}'.format(itm['username']))
+
+    matchlst = set(_local) & set(user)
+
+    exist = "'" + "','".join(matchlst) + "'"
+
+    # xoa khoi database cac user khong ton tai folder img
+    sql = 'delete from users where username not in ({0})'.format(exist)
+
+    DATABASE.exeNoneQuery(sql)
+    # nén folder for backup
+    file_name  = 'train_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+    src = os.path.join(TRAIN_PATH, SUB_IMG)
+    zipfile(file_name, src)
+    # xóa thư muc
+    new_list = set(_local).difference(user)
+    for idx, itm in enumerate(new_list):
+      data = {}
+      data['user'] = itm
+      removeProfile(data, isall=True)
+  except Exception as e:
+    return False
+
+def zipfile(file_name, src):
+  shutil.make_archive(file_name,'zip', src)

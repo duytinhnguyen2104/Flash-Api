@@ -38,17 +38,23 @@
               </tr>
             </thead>
             <tbody>
-              {% for itm in data %}
-              <tr data-id="{{itm.username}}">
-                <td>{{itm.username}}</td>
-                <td>{{itm.fullname}}</td>
-                <td>{{itm.token}}</td>
-                <td class="column-fix"><input type="checkbox" value="{{itm.isAdmin}}"></td>
-                <td class="column-fix"><input type="checkbox" value="{{itm.active}}"></td>
-                <td class="column-fix"><a class="btn btn-default" data-id="{{itm.username}}"><i
-                      class="fa fa-trash"></i></a></td>
-              </tr>
-              {% endfor %}
+              {% if data|length > 0 %}
+                {% for itm in data %}
+                <tr data-id="{{itm.username}}">
+                  <td>{{itm.username}}</td>
+                  <td>{{itm.fullname}}</td>
+                  <td>{{itm.token}}</td>
+                  <td class="column-fix"><input type="checkbox" value="{{itm.isAdmin}}"></td>
+                  <td class="column-fix"><input type="checkbox" value="{{itm.active}}"></td>
+                  <td class="column-fix"><a class="btn btn-default" data-id="{{itm.username}}"><i
+                        class="fa fa-trash"></i></a></td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="6">NO DATA</td>
+                </tr>
+              {% endif %}
             </tbody>
           </table>
         </div>
