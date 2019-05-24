@@ -9,6 +9,8 @@
 5. Set enviroment for project
   python -m venv env
 
+rmvirtualenv ENVNAME
+
 6.================================= coverage =================================
 coverage run tests.py [File cần run]
 
